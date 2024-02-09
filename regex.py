@@ -1,29 +1,30 @@
 def match(pattern, text, result=''):
     """ String String -> Maybe String
-    a Reg Exp that finds matches where '*' is involved"""
+        a Reg Exp that returns the first, simplest portion of text that matches pattern"""
     if pattern == '':
         return result
     elif text == '':
         return False
-    yattern = pattern + '  '
-    p, op, attern = yattern[0], yattern[1], yattern[2:]
-    if op == '*':
-        yikes = match(attern[1:-2], text[1:], result+text[0])
-        if attern[0] == text[0] and yikes:
-            return yikes
-        else:
-            yikes = match(pattern, text[1:], result+text[0])
-            if p[0] == text[0] and yikes:
-                return yikes
-            else: 
-                return match(attern[:-2], text, result)
+    elif len(pattern) > 2 and pattern[1] == '*':
+        return match_star(pattern[0], pattern[2:], text, result)
+    elif len(pattern) == 2 and pattern[1] == '*':
+        return match_star(pattern[0], '', text, result)
+    elif pattern[0] == text[0]:
+        return match(pattern[1:], text[1:], result+text[0])
     else:
-        yikes = match(pattern[1:], text[1:], result+text[0])
-        if pattern[0] == text[0] and yikes:
-            return yikes
-        else: 
-            return False
+        return False
+        
 
+def match_star(p, pattern, text, result):
+    """ String String -> Maybe String
+        a Reg Exp that finds matches where '*' is involved"""
+    yikes = match(pattern, text, result)
+    if len(pattern) > 0 and yikes:
+        return yikes
+    elif p == text[0]:
+        return match_star(p, pattern, text[1:], result+text[0])
+    else:
+        return yikes
 
 
 def tests():
