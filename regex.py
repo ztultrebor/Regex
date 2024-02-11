@@ -6,9 +6,14 @@ def match(pattern, text, result=''):
     elif text == '':
         return False
     elif len(pattern) > 2 and pattern[1] in ('*', '?'):
+        star_match = match_star(pattern[0], pattern[1], pattern[2:], text, result)
         return match_star(pattern[0], pattern[1], pattern[2:], text, result)
     elif len(pattern) == 2 and pattern[1] in ('*', '?'):
         return match_star(pattern[0], pattern[1], '', text, result)
+    elif len(pattern) > 2 and pattern[1] == '+':
+        return match_plus(pattern[0], pattern[1], pattern[2:], text, result)
+    elif len(pattern) == 2 and pattern[1] == '+':
+        return match_plus(pattern[0], pattern[1], '', text, result)
     elif pattern[0] == text[0]:
         return match(pattern[1:], text[1:], result+text[0])
     else:
@@ -27,6 +32,13 @@ def match_star(p, op, pattern, text, result):
         return match(pattern, text[1:], result+text[0])
     else:
         return yikes
+    
+
+def match_plus(p, op, pattern, text, result):
+    if op == '+' and p == text[0]:
+        return match_star(p, '*', pattern, text[1:], result+text[0])
+    else:
+        False
 
 
 def tests():
@@ -42,6 +54,7 @@ def tests():
     assert (match("s?ssha", "sshark!")) == "ssha"
     assert (match("ps?", "pshark!")) == "ps"
     assert (match("ps?", "phark!")) == "p"
+    assert (match("s+ssha", "ssssssshark!")) == "sssssssha"
     print("Tests pass!")
 
 tests()
