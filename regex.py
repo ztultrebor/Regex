@@ -7,16 +7,15 @@ def match(pattern, text, result=''):
     """ String String -> Maybe String
         a Reg Exp that returns the first, simplest portion of text that matches pattern"""
     lp = len(pattern)
-    if pattern == '':
+    if lp == 0:
         return result
     elif text == '':
         return False
     elif lp > 1 and pattern[1] in ('*', '?', '+'):
-        res = pattern[2:lp] #('', pattern[2:])[len(pattern)>2]
         if pattern[1] in ('*', '?'):
-            return match_star(pattern[0], pattern[1], res, text, result)
+            return match_star(pattern[0], pattern[1], pattern[2:lp], text, result)
         elif pattern[1] == '+':
-            return match_plus(pattern[0], pattern[1], res, text, result)
+            return match_plus(pattern[0], pattern[1], pattern[2:lp], text, result)
     elif pattern[0] == text[0]:
         return match(pattern[1:], text[1:], result+text[0])
     else:
