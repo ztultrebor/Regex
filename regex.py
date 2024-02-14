@@ -12,11 +12,11 @@ def match(pattern, text, result=''):
     elif text == '':
         return False
     elif lp > 1 and pattern[1] == '*':
-            return match_star(pattern[0], pattern[2:lp], text, result)
+            return match_star(pattern[0], pattern[2:], text, result)
     elif lp > 1 and pattern[1] == '?':
-            return match_perhaps(pattern[0], pattern[2:lp], text, result)
+            return match_perhaps(pattern[0], pattern[2:], text, result)
     elif lp > 1 and pattern[1] == '+':
-            return match_plus(pattern[0], pattern[2:lp], text, result)
+            return match_plus(pattern[0], pattern[2:], text, result)
     elif pattern[0] == text[0]:
         return match(pattern[1:], text[1:], result+text[0])
     else:
